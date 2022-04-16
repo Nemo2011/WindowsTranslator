@@ -5,11 +5,14 @@
 
 ## 运行<BR>
 导入visual studio。<BR>
-主要使用C#，Windows Form，接口用python写的，源码api.py，打包后api.exe，<BR>
-用的是pyinstaller。<BR>
+主要使用C#，Windows Form。
 
 ## 用法
 会的都会。
+
+## 运行条件
+接口需要什么？
+Internet! Internet! Internet! Internet! Internet! 
 
 ## api
 你猜。[接口](#1)
@@ -27,8 +30,6 @@
 ```
 
 ## 借鉴
-[api源码：](https://blog.csdn.net/weixin_44259720/article/details/104648444)
+[python_api源码：(已弃用)](https://blog.csdn.net/weixin_44259720/article/details/104648444)
+[new:C#api源码：](https://blog.csdn.net/qq_43474959/article/details/108358572)
 [访问id：](https://blog.csdn.net/weixin_45738504/article/details/116168839)
-
-## 版权
-除了api，界面版权所有。License undered the MIT license. 

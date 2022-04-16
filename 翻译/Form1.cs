@@ -1,5 +1,9 @@
+using System;
 using System.Text;
-using System.Diagnostics;
+using System.Net;
+using System.IO;
+using System.Security.Cryptography;
+using System.Web;
 using Newtonsoft.Json;
 
 namespace 翻译
@@ -15,24 +19,80 @@ namespace 翻译
 
         public string trans(string input, string lang)
         {
-            Process cmd = new Process();
-            cmd.StartInfo.FileName = @"api.exe";
-            cmd.StartInfo.UseShellExecute = false;
-            cmd.StartInfo.RedirectStandardInput = true;
-            cmd.StartInfo.RedirectStandardOutput = true;
-            cmd.StartInfo.WorkingDirectory = ".";
-            cmd.StartInfo.CreateNoWindow = true;
-            cmd.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-            cmd.StartInfo.Arguments = "\"" + input + "\" \"" + lang + "\"";
-            cmd.Start();
-            string outstr = cmd.StandardOutput.ReadToEnd();
-            outstr.Replace("\n", " ");
-            cmd.WaitForExit();
-            cmd.Close();
-            return outstr;
+            try
+            {
+                // 原文
+                string q = input;
+                // 源语言
+                string from = "auto";
+                // 目标语言
+                string to = lang;
+                // 改成您的APP ID
+                string appId = "20200211000382774";
+                Random rd = new Random();
+                string salt = rd.Next(100000).ToString();
+                // 改成您的密钥
+                string secretKey = "b1imCNk_EdXIHM0zX2bD";
+                string sign = EncryptString(appId + q + salt + secretKey);
+                string url = "http://api.fanyi.baidu.com/api/trans/vip/translate?";
+                url += "q=" + HttpUtility.UrlEncode(q);
+                url += "&from=" + from;
+                url += "&to=" + to;
+                url += "&appid=" + appId;
+                url += "&salt=" + salt;
+                url += "&sign=" + sign;
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "GET";
+                request.ContentType = "text/html;charset=UTF-8";
+                request.UserAgent = null;
+                request.Timeout = 6000;
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                Stream myResponseStream = response.GetResponseStream();
+                StreamReader myStreamReader = new StreamReader(myResponseStream, Encoding.GetEncoding("utf-8"));
+                string retString = myStreamReader.ReadToEnd();
+                myStreamReader.Close();
+                myResponseStream.Close();
+                JsonReader json = new JsonTextReader(new StringReader(retString));
+                for (int i = 1; i <= 12; i++)
+                {
+                    json.Read();
+                }
+                if (json.Value == null)
+                {
+                    return "";
+                }
+                else
+                {
+                    string final = json.Value.ToString();
+                    return final;
+                }
+            }
+            catch (Exception ex)
+            {
+                string e = ex.ToString();
+                return e;
+            }
         }
 
-        private void zh_CheckedChanged(object sender, EventArgs e)
+        public static string EncryptString(string str)
+        {
+            MD5 md5 = MD5.Create();
+            // 将字符串转换成字节数组
+            byte[] byteOld = Encoding.UTF8.GetBytes(str);
+            // 调用加密方法
+            byte[] byteNew = md5.ComputeHash(byteOld);
+            // 将加密结果转换为字符串
+            StringBuilder sb = new StringBuilder();
+            foreach (byte b in byteNew)
+            {
+                // 将字节转换成16进制表示的字符串，
+                sb.Append(b.ToString("x2"));
+            }
+            // 返回加密的字符串
+            return sb.ToString();
+        }
+
+            private void zh_CheckedChanged(object sender, EventArgs e)
         {
             lang = "zh";
         }
