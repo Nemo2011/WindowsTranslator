@@ -5,7 +5,7 @@
 
 ## 运行<BR>
 导入visual studio。<BR>
-主题使用C#，Windows Form，接口用python写的，源码api.py，打包后api.exe，<BR>
+主要使用C#，Windows Form，接口用python写的，源码api.py，打包后api.exe，<BR>
 用的是pyinstaller。<BR>
 
 ## 用法
