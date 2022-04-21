@@ -92,7 +92,7 @@ namespace 翻译
             return sb.ToString();
         }
 
-            private void zh_CheckedChanged(object sender, EventArgs e)
+        private void zh_CheckedChanged(object sender, EventArgs e)
         {
             lang = "zh";
         }
